@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "493734572180",
+    "project_id": "prj3-402914",
+    "storage_bucket": "prj3-402914.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493734572180:android:e296712b2506575d1b8481",
+        "android_client_info": {
+          "package_name": "com.example.prj3_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "493734572180-evbpbb3ibnudn8be16epsknduucq10ct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFVhTvgKFf_XSei6xw6FwsSk2OnoHKaz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "493734572180-evbpbb3ibnudn8be16epsknduucq10ct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493734572180:android:26ce4614e39b3fb11b8481",
+        "android_client_info": {
+          "package_name": "com.fln.studyassistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "493734572180-evbpbb3ibnudn8be16epsknduucq10ct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFVhTvgKFf_XSei6xw6FwsSk2OnoHKaz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "493734572180-evbpbb3ibnudn8be16epsknduucq10ct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
