@@ -1,14 +1,23 @@
 import mongoose from "mongoose";
-import { AuthorSchema } from "./student.model";
 
 const model = mongoose.model(
     "Document",
     new mongoose.Schema({
-        name: {type: String, require: true},
-        originalName: {type: String, require: true},
+        name: { type: String, required: true },
+        originalName: { type: String, required: true },
         size: Number,
-        author: typeof AuthorSchema,
-        tags: [String],
+        vote: {
+            type: typeof new mongoose.Schema({
+                detail: [{
+                    author: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+                    vote: Number
+                }],
+                count: Number
+            }),
+            default: {detail:[], count:0}
+        },
+        author: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+        tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
         createdAt: Number,
         updatedAt: Number
     }, {
@@ -19,3 +28,13 @@ const model = mongoose.model(
 );
 
 export const Document = model;
+
+const model2 = mongoose.model(
+    "Tag",
+    new mongoose.Schema({
+        name: { type: String, required: true },
+        description: { type: String, required: true }
+    })
+)
+
+export const Tag = model2;

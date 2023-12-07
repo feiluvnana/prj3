@@ -1,5 +1,5 @@
 import multer = require('multer');
-import views = require('../views/view_template');
+import views = require('../views/view');
 import path = require('path');
 import { Student } from '../models/student.model';
 import crypto = require('crypto');
@@ -36,7 +36,7 @@ export const upload = multer({
         }
 
         await Student.find({
-            "token.value": auth[1]
+            "token.value": auth[1], "token.expiredAt": {$gt: Date.now()}
         })
             .then(students => (students.length == 0) ? cb(null, false) : cb(null, true))
             .catch(err => cb(null, false));

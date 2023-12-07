@@ -1,21 +1,14 @@
 import mongoose from "mongoose";
 
-const aschema = new mongoose.Schema({
-    email: {
-        type: String,
-        require: true
-    },
-    avatar: String,
-});
-
 const schema = new mongoose.Schema({
     email: {
         type: String,
-        require: true
+        required: true
     },
     password: {
         type: String,
-        require: true
+        required: true,
+        selected: false
     },
     avatar: String,
     token: typeof new mongoose.Schema({
@@ -30,31 +23,7 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    courses: {
-        type: [
-            typeof new mongoose.Schema({
-                id: {
-                    type: String,
-                    require: true
-                },
-                name: {
-                    type: String,
-                    require: true
-                },
-                midFactor: {
-                    type: Number,
-                    require: true
-                },
-                mid: Number,
-                final: Number,
-                courseFactor: {
-                    type: Number,
-                    require: true
-                }
-            })
-        ],
-        default: []
-    },
+    week: Number,
     createdAt: Number,
     updatedAt: Number
 }, {
@@ -71,5 +40,3 @@ const model = mongoose.model(
 export const Student = model;
 
 export const StudentSchema = schema;
-
-export const AuthorSchema = aschema;

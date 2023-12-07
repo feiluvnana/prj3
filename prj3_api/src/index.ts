@@ -1,10 +1,13 @@
 import express = require('express');
 import mongoose from 'mongoose';
 
-import norres = require('./views/view_template');
+import norres = require('./views/view');
 import { studentRoute } from './routes/student.route';
 import { init } from './helpers/db';
 import { documentRoute } from './routes/document.route';
+import { Tag } from './models/document.model';
+import { reminderRoute } from './routes/reminder.route';
+import { courseRoute } from './routes/course.route';
 
 const port = 3802;
 async function main() {
@@ -21,6 +24,8 @@ async function main() {
     app.use("/file/view", express.static("F:\\Desktop\\my-crash-course\\prj3\\prj3_api\\upload"));
     app.use("/student", studentRoute);
     app.use("/document", documentRoute);
+    app.use("/reminder", reminderRoute);
+    app.use("/course", courseRoute);
     app.use((_, res) => {
         norres.res404_noroute(res);
     });

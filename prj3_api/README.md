@@ -1,13 +1,31 @@
 ## API SPECIFICATION
 
 1. Login
-    - Endpoint: `/apis/v1/login`
+    - Endpoint: `student/login`
     - Method: `POST`
     - Authorization: `none`
-    - Parameters: 
+    - Body: 
     ```
     {
-        email: <>
+        email: String,
+        password: String
+    }
+    ```
+    - Headers: 
+    ```
+    {
+        Content-Type: application/json
+    }
+    ```
+    - Response:
+    ```
+    {
+        code: String,
+        message: String,
+        data: {
+            token: String,
+            expiredAt: Number
+        }
     }
     ```
 2. 
