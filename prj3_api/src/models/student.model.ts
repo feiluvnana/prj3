@@ -10,20 +10,19 @@ const schema = new mongoose.Schema({
         required: true,
         selected: false
     },
-    avatar: String,
+    // avatar: String,
     token: typeof new mongoose.Schema({
         value: String,
         expiredAt: Date
     }),
-    key: typeof new mongoose.Schema({
-        value: String,
-        expiredAt: Date
-    }),
-    active: {
-        type: Boolean,
-        default: false
-    },
-    week: Number,
+    // key: typeof new mongoose.Schema({
+    //     value: String,
+    //     expiredAt: Date
+    // }),
+    // active: {
+    //     type: Boolean,
+    //     default: false
+    // },
     createdAt: Number,
     updatedAt: Number
 }, {
@@ -38,5 +37,3 @@ const model = mongoose.model(
 );
 
 export const Student = model;
-
-export const StudentSchema = schema;

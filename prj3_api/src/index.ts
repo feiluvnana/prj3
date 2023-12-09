@@ -1,34 +1,24 @@
 import express = require('express');
-import mongoose from 'mongoose';
 
-import norres = require('./views/view');
 import { studentRoute } from './routes/student.route';
-import { init } from './helpers/db';
+import { init as dbinit } from './configs/db';
 import { documentRoute } from './routes/document.route';
-import { Tag } from './models/document.model';
-import { reminderRoute } from './routes/reminder.route';
-import { courseRoute } from './routes/course.route';
+import { cors } from './middlewares/cors.middleware';
+import { notfound } from './middlewares/notfound.middleware';
 
 const port = 3802;
 async function main() {
-    await init();  
-
+    await dbinit();  
     const app = express();
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    app.use(function (_, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
-    });
-    app.use("/file/view", express.static("F:\\Desktop\\my-crash-course\\prj3\\prj3_api\\upload"));
-    app.use("/student", studentRoute);
-    app.use("/document", documentRoute);
-    app.use("/reminder", reminderRoute);
-    app.use("/course", courseRoute);
-    app.use((_, res) => {
-        norres.res404_noroute(res);
-    });
+    app.use(cors);
+    app.use("/api/v1/file/view", express.static("F:\\Desktop\\my-crash-course\\prj3\\prj3_api\\upload"));
+    app.use("/api/v1/student", studentRoute);
+    app.use("/api/v1/document", documentRoute);
+    // app.use("/reminder", reminderRoute);
+    // app.use("/course", courseRoute);
+    app.use(notfound);
     app.listen(port, "localhost", () => {
         console.log(`Listening on port ${port}`);
     });
