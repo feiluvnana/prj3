@@ -134,46 +134,40 @@ export default class DocumentService {
             });
     }
 
-    static async vote() {
+    static async vote(id: mongoose.Types.ObjectId, vote: number, studentId: mongoose.Types.ObjectId, isReversed: boolean) {
         await Document.updateOne({
-            "_id": new mongoose.Types.ObjectId(req.body["id"].toString())
+            "_id": id
         }, {
             $inc: {
-                "vote.count": req.body["vote"]
+                "vote.count": vote
             },
             $push: {
                 "vote.detail": {
-                    "author": student._id,
-                    "vote": req.body["vote"]
+                    "author": studentId,
+                    "vote": vote
                 }
             }
         }).then(async _ => {
-            if (document != null) {
+            if (isReversed) {
                 await Document.updateOne({
-                    "_id": new mongoose.Types.ObjectId(req.body["id"].toString())
+                    "_id": id
                 }, {
                     $inc: {
-                        "vote.count": req.body["vote"]
+                        "vote.count": vote
                     },
                     $pull: {
                         "vote.detail": {
-                            "author": student._id,
-                            "vote": - req.body["vote"]
+                            "author": studentId,
+                            "vote": - vote
                         }
                     }
-                })
-                    .then(value => res.status(200).json({
-                        code: "200 - OK",
-                        message: "Bình chọn thành công."
-                    }))
-                    .catch(err => console.log(err));
-            } else {
-                res.status(200).json({
-                    code: "200 - OK",
-                    message: "Bình chọn thành công."
-                })
+                }).catch(err => {
+                    throw new InternalError(500, "Internal Error.");
+                });
             }
         })
-            .catch(err => console.log(err));
+            .catch(err => {
+                throw new InternalError(500, "Internal Error.");
+            });
     }
 }
