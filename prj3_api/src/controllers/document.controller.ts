@@ -7,6 +7,7 @@ export const upload = async (req: express.Request, res: express.Response) => {
     let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(500).json({
         message: err.message
     }));
+    if (res.headersSent) return;
     await DocumentService.create({
         name: req.file.path.split("\\")[req.file.path.split("\\").length - 1],
         originalName: req.file.originalname,
@@ -18,7 +19,7 @@ export const upload = async (req: express.Request, res: express.Response) => {
             message: err.message
         }))
     if (res.headersSent) return;
-    res.status(200).json({
+    res.status(201).json({
         message: "File được tải lên thành công"
     });
 }
@@ -63,6 +64,7 @@ export const vote = async (req: express.Request, res: express.Response) => {
     let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(500).json({
         message: err.message
     }));
+    if (res.headersSent) return;
     if (req.body["vote"] === 0) {
         await DocumentService.cancelVote(new mongoose.Types.ObjectId(req.body["id"]), req.body["oldVote"], student._id).catch(err => res.status(err.status).json({
             message: err.message
@@ -73,7 +75,7 @@ export const vote = async (req: express.Request, res: express.Response) => {
         message: err.message
     }));
     if (res.headersSent) return;
-    DocumentService.vote(new mongoose.Types.ObjectId(req.body["id"]), req.body["vote"], student._id, document != null).catch(err => res.status(err.status).json({
+    await DocumentService.vote(new mongoose.Types.ObjectId(req.body["id"]), req.body["vote"], student._id, document != null).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;
