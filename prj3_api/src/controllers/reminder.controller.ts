@@ -6,14 +6,14 @@ import StudentService from '../services/student.service';
 import ReminderService from '../services/reminder.service';
 
 export const create = async (req: express.Request, res: express.Response) => {
-    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(500).json({
+    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;
     await ReminderService.create({
         ...req.body,
         student: student._id
-    }).catch(err => res.status(500).json({
+    }).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;
@@ -23,7 +23,7 @@ export const create = async (req: express.Request, res: express.Response) => {
 }
 
 export const get = async (req: express.Request, res: express.Response) => {
-    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(500).json({
+    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if(res.headersSent) return;
@@ -35,7 +35,7 @@ export const get = async (req: express.Request, res: express.Response) => {
             count: (reminders as any[]).length
         },
         data: reminders
-    })).catch(err => res.status(500).json({
+    })).catch(err => res.status(err.status).json({
         message: err.message
     }));
 }

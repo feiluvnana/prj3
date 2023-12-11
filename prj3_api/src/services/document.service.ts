@@ -18,6 +18,74 @@ export default class DocumentService {
             });
     }
 
+    static async getTotalUploadDocumentCount(studentId: mongoose.Types.ObjectId): Promise<number> {
+        return Document.aggregate([
+            {
+                '$match': {
+                    author: studentId
+                }
+            }
+        ]).then(documents => documents.length)
+            .catch(err => {
+                throw new InternalError(500, "Internal Error.");
+            });
+    }
+
+    static async getTotalUploadDocumentCountByGenre(studentId: mongoose.Types.ObjectId) {
+        return Document.aggregate([
+            {
+                '$match': {
+                    author: studentId
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'tags',
+                    'localField': 'tags',
+                    'foreignField': '_id',
+                    'as': 'tags',
+                    'pipeline': [
+                        {
+                            '$project': {
+                                "__v": 0,
+                                "description": 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                '$unwind': '$tags'
+            },
+            {
+                '$group': {
+                    _id: '$tags.name',
+                    count: {
+                        '$sum': 1
+                    }
+                }
+            }
+        ])
+            .catch(err => {
+                throw new InternalError(500, "Internal Error.");
+            });
+    }
+
+    static async getTotalUploadDocumentCountLastMonth(studentId: mongoose.Types.ObjectId): Promise<number> {
+        return Document.aggregate([
+            {
+                '$match': {
+                    author: studentId,
+                    createdAt: { "$gt": Date.now() - 1000 * 60 * 60 * 24 * 30 }
+                },
+            },
+        ])
+            .then(documents => documents.length)
+            .catch(err => {
+                throw new InternalError(500, "Internal Error.");
+            });
+    }
+
     static async get(params: {
         offset: number,
         limit: number,
@@ -26,12 +94,11 @@ export default class DocumentService {
         name: string,
         originalName: string
     }) {
-        let matchObj = {
-            tags: params.tags.length != 0 ? { $in: params.tags } : undefined,
-            createdAt: params.offset != -1 ? { $lt: params.offset } : undefined,
-            name: params.name !== "" ? { $regex: RegExp(params.name, "i") } : undefined,
-            originalName: params.originalName !== "" ? { $regex: RegExp(params.originalName, "i") } : undefined
-        };
+        let matchObj = {};
+        if (params.tags.length !== 0) matchObj["tags"] = { $in: params.tags };
+        if (params.offset !== -1) matchObj["createdAt"] = { $lt: params.offset };
+        if (params.name !== "") matchObj["name"] = { $regex: RegExp(params.name, "i") };
+        if (params.originalName !== "") matchObj["originalName"] = { $regex: RegExp(params.originalName, "i") };
         let sortObj = {};
         if (params.sort == 1) {
             sortObj = {
@@ -62,22 +129,6 @@ export default class DocumentService {
                 }
             },
             {
-                '$lookup': {
-                    'from': 'tags',
-                    'localField': 'tags',
-                    'foreignField': '_id',
-                    'as': 'tags',
-                    'pipeline': [
-                        {
-                            '$project': {
-                                "__v": 0,
-                                "description": 0
-                            }
-                        }
-                    ]
-                }
-            },
-            {
                 '$unwind': {
                     'path': '$author'
                 }
@@ -88,7 +139,6 @@ export default class DocumentService {
                 }
             }
         ])
-            .then(documents => documents)
             .catch(err => {
                 throw new InternalError(500, "Internal Error.");
             });
@@ -96,7 +146,6 @@ export default class DocumentService {
 
     static async getTags() {
         return Tag.find({}, { "__v": 0 })
-            .then(tags => tags)
             .catch(err => {
                 throw new InternalError(500, "Internal Error.");
             });
@@ -128,7 +177,6 @@ export default class DocumentService {
                 }]
             }
         })
-            .then(document => document)
             .catch(err => {
                 throw new InternalError(500, "Internal Error.");
             });

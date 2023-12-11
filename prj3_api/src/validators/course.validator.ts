@@ -3,7 +3,7 @@ import Joi = require('joi');
 
 export const validateCreateCourseInfo = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     var schema = Joi.object({
-        id: Joi.string().required(),
+        courseId: Joi.string().required(),
         mid: Joi.number(),
         final: Joi.number(),
         name: Joi.string().required(),
@@ -18,7 +18,7 @@ export const validateCreateCourseInfo = (req: express.Request, res: express.Resp
         semester: Joi.object({
             "start": Joi.number().required(),
             "name": Joi.string().required(),
-        })
+        }).required()
     })
     if (schema.validate(req.body).error !== undefined) {
         res.status(422).json({

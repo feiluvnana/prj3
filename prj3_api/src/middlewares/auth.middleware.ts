@@ -9,7 +9,6 @@ export const auth = async (req: express.Request, res: express.Response, next: ex
         return;
     }
     let authorization = req.headers.authorization.split(" ");
-    console.log(authorization);
     if (authorization[0].toLowerCase() !== "bearer") {
         res.status(403).json({
             message: "Invalid token."

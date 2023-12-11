@@ -4,15 +4,14 @@ import { Course } from '../models/course.model';
 import CourseService from '../services/course.service';
 
 export const create = async (req: express.Request, res: express.Response) => {
-    let student: any = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(500).json({
+    let student: any = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;
-    let course = new Course({
+    await CourseService.create({
         ...req.body,
         student: student._id
-    });
-    await course.save().catch(err => res.status(500).json({
+    }).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;
@@ -21,12 +20,12 @@ export const create = async (req: express.Request, res: express.Response) => {
     });
 }
 
-export const read = async (req: express.Request, res: express.Response) => {
-    let student: any = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(500).json({
+export const get = async (req: express.Request, res: express.Response) => {
+    let student: any = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;
-    let courses = await CourseService.get(student._id).catch(err => res.status(500).json({
+    let courses = await CourseService.get(student._id).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;

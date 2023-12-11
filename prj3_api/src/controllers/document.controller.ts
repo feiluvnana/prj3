@@ -4,7 +4,7 @@ import DocumentService from '../services/document.service';
 import StudentService from '../services/student.service';
 
 export const upload = async (req: express.Request, res: express.Response) => {
-    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(500).json({
+    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;
@@ -22,6 +22,38 @@ export const upload = async (req: express.Request, res: express.Response) => {
     res.status(201).json({
         message: "File được tải lên thành công"
     });
+}
+
+export const getStatistics = async (req: express.Request, res: express.Response) => {
+    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(err.status).json({
+        message: err.message
+    }));
+    if (res.headersSent) return;
+    let total = await DocumentService.getTotalUploadDocumentCount(student._id).catch(err => res.status(err.status).json({
+        message: err.message
+    }));
+    if (res.headersSent) return;
+    let totalByTags = await DocumentService.getTotalUploadDocumentCountByGenre(student._id).catch(err => res.status(err.status).json({
+        message: err.message
+    }));
+    if (res.headersSent) return;
+    let totalLastMonth = await DocumentService.getTotalUploadDocumentCountLastMonth(student._id).catch(err => res.status(err.status).json({
+        message: err.message
+    }));
+    if (res.headersSent) return;
+    res.status(200).json({
+        message: "Lấy thống kê tài liệu thành công.",
+        meta: {
+            type: "object"
+        },
+        data: {
+            total: total,
+            totalBy: {
+                tags: totalByTags,
+                lastMonth: totalLastMonth
+            }
+        }
+    })
 }
 
 export const get = async (req: express.Request, res: express.Response) => {
@@ -61,7 +93,7 @@ export const getTags = async (req: express.Request, res: express.Response) => {
 }
 
 export const vote = async (req: express.Request, res: express.Response) => {
-    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(500).json({
+    let student = await StudentService.getStudent(req.headers.authorization.split(" ")[1]).catch(err => res.status(err.status).json({
         message: err.message
     }));
     if (res.headersSent) return;

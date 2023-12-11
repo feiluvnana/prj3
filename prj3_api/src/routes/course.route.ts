@@ -5,6 +5,6 @@ import { auth } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 router.post("/", auth, validateCreateCourseInfo, controller.create);
-router.get("/", auth, controller.read);
+router.get("/", auth, controller.get);
 
 export const courseRoute = router;

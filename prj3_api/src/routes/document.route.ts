@@ -9,5 +9,6 @@ router.post("/upload", auth, upload.single('document'), validateUploadDocumentIn
 router.get("/", auth, validateGetDocumentInfo, controller.get);
 router.get("/tags", auth, controller.getTags);
 router.put("/vote", auth, validateVoteDocumentInfo, controller.vote);
+router.get("/statistics", auth, controller.getStatistics);
 
 export const documentRoute = router;

@@ -4,6 +4,7 @@ import Joi = require('joi');
 import { Student } from '../models/student.model';
 import StudentService from '../services/student.service';
 import AuthUtils from '../utils/util';
+import { sendVerifyCode } from '../configs/mailer';
 
 export const register = async (req: express.Request, res: express.Response) => {
     let isRegistered = await StudentService.isRegistered(req.body.email, req.body.password).catch(err => {
@@ -24,8 +25,9 @@ export const register = async (req: express.Request, res: express.Response) => {
         })
     });
     if (res.headersSent) return;
+    // sendVerifyCode(res.body.email, )
     res.status(201).json({
-        message: "Student registered successfully."
+        message: "Đăng ký thành công."
     });
 }
 
